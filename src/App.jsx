@@ -1,10 +1,13 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 function App() {
   const [length, setLength] = useState(8);
   const [numAllowed, setNumAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
+
+  // useRef hook
+  const passwordRef = useRef(null)
 
   const passwordGenerator = useCallback(() => {
     let pass=""
@@ -20,6 +23,12 @@ function App() {
     setPassword(pass)
 
   }, [length, numAllowed, charAllowed, setPassword]);
+
+  const copyPasswordToClipboard = useCallback(() => {
+    passwordRef.current?.select()
+    passwordRef.current?.setSelectionRange(0, 101)
+    window.navigator.clipboard.writeText(password)
+  }, [password]) 
 
   useEffect(() => {passwordGenerator()}, [length, numAllowed, charAllowed, passwordGenerator])
 
@@ -38,8 +47,10 @@ function App() {
             value={password}
             readOnly
             placeholder='Password'
+            ref={passwordRef}
             />
             <button
+            onClick={copyPasswordToClipboard}
             className='flex w-1/6 bg-blue-700 h-full justify-center items-center text-white font-medium'>
               copy
             </button>
@@ -50,7 +61,7 @@ function App() {
                     <input
                     type='range'
                     min={4}
-                    max={50}
+                    max={100}
                     value={length}
                     className='cursor-pointer mt-1'
                     onChange={(e) => setLength(e.target.value)}
