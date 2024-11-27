@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 function App() {
   const [length, setLength] = useState(8);
@@ -21,6 +21,8 @@ function App() {
 
   }, [length, numAllowed, charAllowed, setPassword]);
 
+  useEffect(() => {passwordGenerator()}, [length, numAllowed, charAllowed, passwordGenerator])
+
   return (
     <>
       {/* This div is for outer dark mode */}
@@ -38,7 +40,6 @@ function App() {
             placeholder='Password'
             />
             <button
-
             className='flex w-1/6 bg-blue-700 h-full justify-center items-center text-white font-medium'>
               copy
             </button>
